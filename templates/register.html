@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+  <h1 class="title">הרשמה</h1>
+
+  {% if error %}
+    <p class="muted" style="color:#b00020; font-weight:700; margin-top:0;">
+      {{ error }}
+    </p>
+  {% endif %}
+
+  <form class="form" method="post" action="{{ url_for('register') }}">
+    <label class="label" for="national_id">ת"ז:</label>
+    <input class="input" id="national_id" name="national_id" required>
+
+    <label class="label" for="role">תפקיד:</label>
+    <select class="input" id="role" name="role" required>
+      <option value="student"  {% if role_prefill == 'student' %}selected{% endif %}>student</option>
+      <option value="lecturer" {% if role_prefill == 'lecturer' %}selected{% endif %}>lecturer</option>
+      <option value="staff"    {% if role_prefill == 'staff' %}selected{% endif %}>staff</option>
+    </select>
+
+    <label class="label" for="password">סיסמה:</label>
+    <input class="input" id="password" type="password" name="password" required>
+
+    <button class="btn" type="submit">הרשמה</button>
+  </form>
+
+  <p class="muted">
+    כבר רשום?
+    <a class="link" href="{{ url_for('login', role=role_prefill) }}">התחבר</a>
+  </p>
+{% endblock %}

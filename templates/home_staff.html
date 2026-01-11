@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Campus – צוות תחזוקה</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='staff_home.css') }}">
+</head>
+<body>
+
+  <header class="top">
+    <a class="logout-btn" href="{{ url_for('logout') }}" aria-label="יציאה" title="יציאה">
+      <img src="{{ url_for('static', filename='exit.png') }}" alt="יציאה">
+    </a>
+
+    <div class="brand">Smart Campus</div>
+
+    <div class="user">
+      <div class="user__line">שם: <span class="muted">{{ user_name or "איש תחזוקה לדוגמה" }}</span></div>
+      <div class="user__line">סיווג: <span class="muted">{{ role or "צוות תחזוקה" }}</span></div>
+    </div>
+  </header>
+<!--
+  {% set all_reports = reports or [
+    {"room":"100","desc":"אין שמע בהקלטה של הזום","date":"23/12/2025"},
+    {"room":"203","desc":"חסר כיסאות בכיתה","date":"22/12/2025"},
+    {"room":"106","desc":"המקרן לא עובד","date":"22/12/2025"},
+    {"room":"103","desc":"המחשב של המרצה לא נדלק","date":"24/12/2025"},
+    {"room":"400","desc":"הכיתה שלנו נעולה","date":"23/12/2025"},
+    {"room":"204","desc":"המזגן לא נדלק","date":"23/12/2025"}
+  ] %}
+-->
+<main class="grid">
+  {% if reports and reports|length > 0 %}
+    {% for r in reports %}
+      <article class="card">
+        <div class="card__room">חדר {{ r["room"] }}</div>
+
+        <div class="card__desc">{{ r["description"] }}</div>
+        {% if r["report_count"] and r["report_count"]|int > 1 %}
+        <div class="card__meta">אוחדו {{ r["report_count"] }} דיווחים בשעה האחרונה</div>
+        {% endif %}
+
+        <div class="card__date">
+          חומרה: {{ r["severity_rank"] if r["severity_rank"] is not none else "?" }}
+          | תאריך דיווח: {{ r["created_at"]|localdt }}
+
+        </div>
+
+<form method="post" action="{{ url_for('maintenance_report_update_status', report_id=r['id']) }}">
+  <input type="hidden" name="status" value="done">
+  <button class="card__btn" type="submit">בוצע</button>
+</form>
+
+
+      </article>
+    {% endfor %}
+  {% else %}
+    <p style="padding:16px;">אין דיווחים כרגע.</p>
+  {% endif %}
+</main>
+
+
+
+
+  <img class="corner-logo" src="{{ url_for('static', filename='app_logo.png') }}" alt="Smart Campus Logo" />
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>פרטי תקלה</title>
+</head>
+<body>
+  <h2>פרטי תקלה #{{ report["id"] }}</h2>
+
+  <p><b>מדווח:</b> {{ report["reporter_national_id"] }} ({{ report["role"] }})</p>
+  <p><b>קטגוריה:</b> {{ report["category_user"] }}</p>
+  <p><b>תיאור:</b> {{ report["description"] }}</p>
+  <p><b>סטטוס:</b> {{ report["status"] }}</p>
+  <p><b>נוצר:</b> {{ report["created_at"] }}</p>
+
+
+  <h3>עדכון סטטוס</h3>
+  <form method="post" action="/maintenance/reports/{{ report['id'] }}/status">
+    <select name="status">
+      <option value="open" {% if report["status"]=="open" %}selected{% endif %}>open</option>
+      <option value="in_progress" {% if report["status"]=="in_progress" %}selected{% endif %}>in_progress</option>
+      <option value="done" {% if report["status"]=="done" %}selected{% endif %}>done</option>
+    </select>
+    <button type="submit">עדכן</button>
+  </form>
+
+  <p><a href="/maintenance/reports">חזרה לרשימה</a></p>
+</body>
+</html>

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='student_reservations.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="student-container">
+    <h2>הזמנת כיתה להיום</h2>
+
+    <div class="date-display">
+        <strong>תאריך הזמנה:</strong> {{ today_date_display }} (סטודנט יכול לשריין כיתות רק לטווח של אותו יום)
+    </div>
+
+    <form method="POST">
+        <div class="field">
+            <label>בחירת טווח שעות:</label>
+
+            <div class="time-range">
+                <input type="time"
+                       name="start_time"
+                       required
+                       dir="ltr"
+                       class="time-input"
+                       min="08:00"
+                       max="20:00"
+                       step="300">
+
+                <span class="time-sep">עד</span>
+
+                <input type="time"
+                       name="end_time"
+                       required
+                       dir="ltr"
+                       class="time-input"
+                       min="08:00"
+                       max="20:00"
+                       step="300">
+            </div>
+        </div>
+
+        <!-- הודעת שגיאה -->
+        <div class="form-error" id="timeError" style="display:none;"></div>
+
+        <button type="submit" class="search-btn-student">
+            חיפוש כיתה פנויה
+        </button>
+    </form>
+
+    <hr>
+
+    {% if searched %}
+        <div class="results">
+            {% if available_rooms|length > 0 %}
+                <h3>כיתות פנויות להיום:</h3>
+                <div class="room-list">
+                    {% for room in available_rooms %}
+                        <div class="student-room-card">
+                            <span>כיתה {{ room }}</span>
+
+                            <form action="/reservations/book" method="POST">
+                                <input type="hidden" name="room" value="{{ room }}">
+                                <input type="hidden" name="date" value="{{ today_date }}">
+                                <input type="hidden" name="start_time" value="{{ request.form['start_time'] }}">
+                                <input type="hidden" name="end_time" value="{{ request.form['end_time'] }}">
+
+                                <button type="submit" class="book-btn-student">
+                                    הזמן עכשיו
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-rooms">
+                    מצטערים, אין כיתות פנויות להיום בשעות האלו.
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- בדיקת טווח שעות בצד לקוח -->
+<script>
+const form = document.querySelector("form");
+const startInput = document.querySelector('input[name="start_time"]');
+const endInput = document.querySelector('input[name="end_time"]');
+const errBox = document.getElementById("timeError");
+
+function toMinutes(t){
+  const [h,m] = t.split(":").map(Number);
+  return h*60 + m;
+}
+
+form.addEventListener("submit", (e) => {
+  errBox.style.display = "none";
+  errBox.textContent = "";
+
+  const s = startInput.value;
+  const en = endInput.value;
+  if(!s || !en) return;
+
+  const sMin = toMinutes(s);
+  const eMin = toMinutes(en);
+
+  if (eMin <= sMin){
+    e.preventDefault();
+    errBox.textContent =
+      "טווח שעות לא תקין: שעת סיום חייבת להיות אחרי שעת התחלה. אנא תקן ונסה שוב.";
+    errBox.style.display = "block";
+    endInput.focus();
+  }
+});
+</script>
+
+{% endblock %}

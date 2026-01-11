@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Campus – סטודנט</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='home_screen.css') }}">
+</head>
+<body>
+
+<header class="top">
+  <a class="logout-btn" href="{{ url_for('logout') }}" aria-label="יציאה" title="יציאה">
+    <img src="{{ url_for('static', filename='exit.png') }}" alt="יציאה">
+  </a>
+
+  <div class="brand">Smart Campus</div>
+
+  <div class="user">
+    <div class="user__line">שם: <span class="muted">{{ user_name }}</span></div>
+    <div class="user__line">סיווג: <span class="muted">{{ role }}</span></div>
+  </div>
+</header>
+
+<main class="layout">
+<section class="main">
+
+<!-- הדיווחים שלי -->
+<div class="panel">
+<h2 class="panel__title">הדיווחים שלי:</h2>
+
+<div class="rows">
+{% if reports and reports|length > 0 %}
+  {% for r in reports %}
+    <div class="row">
+      {% set st = r["status"] %}
+      <span class="status {{ 'status--done' if st == 'done' else 'status--open' }}">
+        {{ 'טופל' if st == 'done' else 'בטיפול' }}
+      </span>
+      <div class="row__text">
+        כיתה: {{ r["room"] }} - {{ r["description"] }}
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="row"><div class="row__text muted">אין דיווחים עדיין</div></div>
+{% endif %}
+</div>
+</div>
+
+<!-- כיתות שתפסתי -->
+<div class="panel">
+<h2 class="panel__title">כיתות שתפסתי:</h2>
+
+<div class="rows rows--tight">
+{% if taken and taken|length > 0 %}
+  {% for t in taken %}
+    {% if t["status"] == "active" %}
+    <div class="row row--x">
+      <button class="xbtn" data-res-id="{{ t['id'] }}">X</button>
+      <div class="row__text">
+        כיתה: {{ t["room"] }} |
+        תאריך: {{ t["date"] }} |
+        שעות: {{ t["start_time"] }}-{{ t["end_time"] }}
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="row"><div class="row__text muted">אין שריונים עדיין</div></div>
+{% endif %}
+</div>
+
+<p class="hint">אנא שחרר את הכיתה במידה ויצאת לפני הזמן :)</p>
+</div>
+</section>
+
+<aside class="side">
+<div class="side__title">תפריט:</div>
+
+<a class="side__item" href="/reservations/student">
+  <div class="side__icon">🔍</div>
+  <div class="side__label">חיפוש כיתה פנויה</div>
+</a>
+
+<a class="side__item" href="/reports/new">
+  <div class="side__icon">❗</div>
+  <div class="side__label">דיווח על תקלה</div>
+</a>
+</aside>
+</main>
+
+<img class="corner-logo" src="{{ url_for('static', filename='app_logo.png') }}" />
+
+<!-- Modal ביטול שריון -->
+<div class="modal-overlay" id="cancelOverlay" hidden>
+  <div class="modal">
+    <h3 class="modal__title">לבטל שריון?</h3>
+    <p class="modal__text">האם אתה בטוח שאתה רוצה לבטל את שריון הכיתה?</p>
+
+    <form id="cancelForm" method="POST">
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost" id="cancelNo">לא</button>
+        <button type="submit" class="btn btn--danger">כן, לבטל</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const cancelOverlay = document.getElementById("cancelOverlay");
+const cancelForm = document.getElementById("cancelForm");
+const cancelNo = document.getElementById("cancelNo");
+
+cancelOverlay.hidden = true;
+
+document.querySelectorAll(".xbtn[data-res-id]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.resId;
+    cancelForm.action = `/reservations/cancel/${id}`;
+    cancelOverlay.hidden = false;
+  });
+});
+
+cancelNo.addEventListener("click", () => cancelOverlay.hidden = true);
+
+cancelOverlay.addEventListener("click", e => {
+  if (e.target === cancelOverlay) cancelOverlay.hidden = true;
+});
+</script>
+
+<!-- Modal הודעת הצלחה -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="modal-overlay" id="infoOverlay">
+      <div class="modal">
+        <p class="modal__text">{{ messages[-1] }}</p>
+
+        <div class="modal__actions">
+          <button class="btn btn--ghost" id="closeInfoBtn">הבנתי</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const infoOverlay = document.getElementById("infoOverlay");
+      const closeBtn = document.getElementById("closeInfoBtn");
+
+      function closeInfoModal(){
+        infoOverlay.remove();
+      }
+
+      closeBtn.addEventListener("click", closeInfoModal);
+
+      infoOverlay.addEventListener("click", (e) => {
+        if (e.target === infoOverlay) closeInfoModal();
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+</body>
+</html>

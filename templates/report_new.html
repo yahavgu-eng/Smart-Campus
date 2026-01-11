@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>דיווח תקלה</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dina2.css') }}">
+</head>
+
+<body class="screen-white">
+  <div class="stage">
+    <div class="panel-beige">
+
+      <!-- כפתור בית -->
+      <a class="home-wrap" href="/" title="מסך בית">
+        <div class="home-circle">
+          <img src="{{ url_for('static', filename='home_icon.png') }}" alt="בית">
+        </div>
+        <div class="home-text">מסך בית</div>
+      </a>
+
+      <!-- תוכן מרכזי -->
+      <div class="content">
+
+        <form id="reportForm" method="post" class="form-stack">
+
+          <div class="field">
+            <div class="label">כיתה:</div>
+            <input class="control" type="text" name="room" placeholder="לדוגמה:  ספרא 100" required>
+          </div>
+
+          <div class="field">
+            <div class="label">נושא התקלה:</div>
+            <select class="control" name="category_user" required>
+              <option value="" disabled selected>בחרי נושא...</option>
+              <option value="מקרן">מקרן</option>
+              <option value="מחשב">מחשב</option>
+              <option value="מיזוג">מיזוג</option>
+              <option value="תאורה">תאורה</option>
+              <option value="ניקיון">ניקיון</option>
+              <option value="אחר">אחר</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label">כתוב כאן את סוג התקלה:</div>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="flash">
+                  {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+
+            <textarea class="control textarea" name="description" placeholder="enter your text here:" required></textarea>
+          </div>
+
+          <div class="center-actions">
+            <button class="btn-pill" type="submit">שליחה</button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- לוגו למטה שמאל -->
+      <div class="logo-left">
+        <img src="{{ url_for('static', filename='app_logo.png') }}" alt="Smart Campus">
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

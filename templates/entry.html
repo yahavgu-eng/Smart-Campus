@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Campus</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesy.css') }}">
+</head>
+
+<body>
+  <main class="page">
+    <section class="hero-card">
+      <div class="hero-top">
+        <img class="hero-logo" src="{{ url_for('static', filename='app_logo.png') }}" alt="Smart Campus">
+      </div>
+
+      <h1 class="hero-title">ברוכים הבאים ל-Smart Campus</h1>
+      <p class="hero-subtitle">בחרו את תפקידכם במערכת:</p>
+
+      <div class="role-grid">
+        <a class="role-card" href="{{ url_for('login') }}?role=staff">
+          <img class="role-img" src="{{ url_for('static', filename='3.png') }}" alt="">
+          <div class="role-label">צוות תפעול</div>
+        </a>
+
+        <a class="role-card" href="{{ url_for('login') }}?role=lecturer">
+          <img class="role-img" src="{{ url_for('static', filename='2.png') }}" alt="">
+          <div class="role-label">מרצה</div>
+        </a>
+
+        <a class="role-card" href="{{ url_for('login') }}?role=student">
+          <img class="role-img" src="{{ url_for('static', filename='1.png') }}" alt="">
+          <div class="role-label">סטודנט</div>
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

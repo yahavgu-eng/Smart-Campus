@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>תוצאות חיפוש</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="{{ url_for('entry') }}" class="home-btn" title="מסך בית">
+    <img src="{{ url_for('static', filename='home_icon.png') }}" alt="מסך בית">
+  </a>
+</div>
+
+<div class="results-container">
+  <h2 class="results-title">כיתות פנויות</h2>
+
+  {# =========================
+     מצב 1: סטודנט (slots)
+     ========================= #}
+  {% if slots is defined and slots and slots|length > 0 %}
+
+    <div class="big-box">
+      <p class="title">תאריך: {{ today_date_display or today_date }}</p>
+    </div>
+
+    {% for s in slots %}
+      <div class="big-box">
+        <p class="subtitle">{{ s.start }}-{{ s.end }}</p>
+      </div>
+
+      <div class="rooms-grid">
+        {% for room in s.rooms %}
+
+          {% set rt = room["room_type"] %}
+          {% set seats = room["seats"] if room["seats"] is not none else "—" %}
+          {% set comps = room["computer_stations"] if room["computer_stations"] is not none else "—" %}
+          {% set has_proj = (room["has_projector"]|int == 1) %}
+
+          <div class="room-card">
+
+            <!-- אייקון מידע -->
+            <div class="info-wrap" tabindex="0">
+              <span class="info-icon">!</span>
+
+              <div class="tooltip-box">
+                {% if rt == "computers" %}
+                  <div class="tip-title">כיתת מחשבים</div>
+                  <div class="tip-line">{{ comps }} עמדות מחשב</div>
+                {% elif rt == "lab" %}
+                  <div class="tip-title">כיתת מעבדה</div>
+                  <div class="tip-line">{{ seats }} כיסאות</div>
+                {% else %}
+                  <div class="tip-title">כיתה רגילה</div>
+                  <div class="tip-line">{{ seats }} כיסאות</div>
+                {% endif %}
+
+                <div class="tip-line">
+                  {% if has_proj %}
+                    יש מקרן
+                  {% else %}
+                    אין מקרן
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="card-header">
+              🏫 {{ room["name"] }}
+            </div>
+
+            <form method="POST" action="{{ url_for('book_room') }}">
+              <input type="hidden" name="room" value="{{ room['code'] }}">
+              <input type="hidden" name="date" value="{{ today_date }}">
+              <input type="hidden" name="start_time" value="{{ s.start }}">
+              <input type="hidden" name="end_time" value="{{ s.end }}">
+
+              <button class="reserve-btn" type="submit">שריין כיתה</button>
+            </form>
+          </div>
+
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+  {# =========================
+     מצב 2: מרצה (free_blocks)
+     ========================= #}
+  {% elif free_blocks is defined and free_blocks and free_blocks|length > 0 %}
+
+    <div class="rooms-grid">
+      {% for b in free_blocks %}
+
+        {% set rt = b["room_type"] %}
+        {% set seats = b["seats"] if b["seats"] is not none else "—" %}
+        {% set comps = b["computer_stations"] if b["computer_stations"] is not none else "—" %}
+        {% set has_proj = (b["has_projector"]|int == 1) %}
+
+        {# תאריך בפורמט DD-MM-YYYY #}
+        {% set dparts = b.date.split('-') %}
+        {% set date_display = dparts[2] ~ '-' ~ dparts[1] ~ '-' ~ dparts[0] %}
+
+        <div class="room-card">
+
+          <!-- אייקון מידע -->
+          <div class="info-wrap" tabindex="0">
+            <span class="info-icon">!</span>
+
+            <div class="tooltip-box">
+              {% if rt == "computers" %}
+                <div class="tip-title">כיתת מחשבים</div>
+                <div class="tip-line">{{ comps }} עמדות מחשב</div>
+              {% elif rt == "lab" %}
+                <div class="tip-title">כיתת מעבדה</div>
+                <div class="tip-line">{{ seats }} כיסאות</div>
+              {% else %}
+                <div class="tip-title">כיתה רגילה</div>
+                <div class="tip-line">{{ seats }} כיסאות</div>
+              {% endif %}
+
+              <div class="tip-line">
+                {% if has_proj %}
+                  יש מקרן
+                {% else %}
+                  אין מקרן
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-header">
+            🏫 {{ b.name }}
+          </div>
+
+          <div class="card-info">
+            <p>טווח פנוי: {{ b.free_start }}-{{ b.free_end }}</p>
+            <p>תאריך: {{ date_display }}</p>
+          </div>
+
+          <!-- טופס שריון חלקי למרצה -->
+          <form class="lecturer-book-form"
+                method="POST"
+                action="{{ url_for('book_room') }}"
+                data-free-start="{{ b.free_start }}"
+                data-free-end="{{ b.free_end }}">
+
+            <input type="hidden" name="room" value="{{ b.code }}">
+            <input type="hidden" name="date" value="{{ b.date }}">
+
+            <!-- נשלחים בפועל לשרת -->
+            <input type="hidden" name="start_time" class="hidden-start">
+            <input type="hidden" name="end_time" class="hidden-end">
+
+            <div class="time-pick-wrap">
+              <div class="time-pick">
+                <label class="time-label">שעת התחלה:</label>
+                <select class="pick-start" dir="ltr" required></select>
+              </div>
+
+              <div class="time-pick">
+                <label class="time-label">שעת סיום:</label>
+                <select class="pick-end" dir="ltr" required></select>
+              </div>
+            </div>
+
+            <button class="reserve-btn" type="submit">שריין כיתה</button>
+          </form>
+        </div>
+
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <p style="color: white; text-align: center; width: 100%;">
+      לא נמצאו כיתות פנויות בשעות אלו.
+    </p>
+  {% endif %}
+</div>
+
+<script>
+/* ---- Lecturer partial time picker (client-side) ---- */
+
+function toMin(t){
+  const parts = (t || "").split(":").map(Number);
+  if(parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return NaN;
+  return parts[0]*60 + parts[1];
+}
+function toHHMM(total){
+  const h = Math.floor(total/60);
+  const m = total%60;
+  return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
+}
+function buildTimes(startHHMM, endHHMM, stepMin){
+  const s = toMin(startHHMM);
+  const e = toMin(endHHMM);
+  if(isNaN(s) || isNaN(e) || e <= s) return [];
+  const out = [];
+  for(let x=s; x<=e; x+=stepMin){
+    out.push(toHHMM(x));
+  }
+  return out;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".lecturer-book-form").forEach(form => {
+    const freeStart = form.dataset.freeStart; // "HH:MM"
+    const freeEnd   = form.dataset.freeEnd;   // "HH:MM"
+
+    const startSel = form.querySelector(".pick-start");
+    const endSel   = form.querySelector(".pick-end");
+
+    const hiddenStart = form.querySelector(".hidden-start");
+    const hiddenEnd   = form.querySelector(".hidden-end");
+
+    if(!startSel || !endSel || !hiddenStart || !hiddenEnd) return;
+
+    // אפשר לשנות ל-15 אם תרצה רזולוציה יותר גבוהה
+    const STEP = 30;
+
+    const times = buildTimes(freeStart, freeEnd, STEP);
+
+    // start יכול להיות עד לפני האחרון (כי חייב להיות end אחריו)
+    const startOptions = times.slice(0, Math.max(0, times.length - 1));
+    startSel.innerHTML = startOptions.map(t => `<option value="${t}">${t}</option>`).join("");
+
+    function refreshEnd(){
+      const sVal = startSel.value;
+      const sMin = toMin(sVal);
+      const endOptions = times.filter(t => toMin(t) > sMin);
+      endSel.innerHTML = endOptions.map(t => `<option value="${t}">${t}</option>`).join("");
+
+      if(endOptions.length > 0){
+        endSel.value = endOptions[0];
+      }
+    }
+
+    // init
+    if(startOptions.length > 0){
+      startSel.value = startOptions[0];
+      refreshEnd();
+    }
+
+    startSel.addEventListener("change", refreshEnd);
+
+    form.addEventListener("submit", (e) => {
+      const s = startSel.value;
+      const en = endSel.value;
+
+      if(!s || !en || toMin(en) <= toMin(s)){
+        e.preventDefault();
+        alert("בחר טווח שעות תקין (סיום חייב להיות אחרי התחלה).");
+        return;
+      }
+
+      hiddenStart.value = s;
+      hiddenEnd.value = en;
+    });
+  });
+});
+</script>
+
+</body>
+</html>

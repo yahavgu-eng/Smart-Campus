@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='lecturer_reservations.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="student-container">
+    <h2>הזמנת כיתה (מרצה)</h2>
+
+    <form method="POST" novalidate>
+        <!-- תאריך -->
+        <div class="field">
+            <label>בחירת תאריך:</label>
+            <input type="date" name="date" required class="date-input-big">
+        </div>
+
+        <!-- שעות -->
+        <div class="field">
+            <label>בחירת טווח שעות:</label>
+
+            <div class="time-range">
+                <!-- שעת התחלה (ימין) -->
+                <div class="time-col">
+                    <input type="time" name="start_time" required dir="ltr">
+                    <div class="under-time-label">שעת התחלה</div>
+                </div>
+
+                <span class="time-separator">עד</span>
+
+                <!-- שעת סיום (שמאל) -->
+                <div class="time-col">
+                    <input type="time" name="end_time" required dir="ltr">
+                    <div class="under-time-label">שעת סיום</div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="search-btn-student">
+            חיפוש כיתה פנויה
+        </button>
+    </form>
+
+    <!-- הודעת שגיאה -->
+    {% if error_msg %}
+        <div class="error-box">{{ error_msg }}</div>
+    {% endif %}
+</div>
+
+<style>
+/* קטן ומקומי כדי שלא תצטרך לשבור CSS עכשיו */
+.time-col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+.under-time-label{
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #1f2d3d;
+    opacity: 0.9;
+}
+</style>
+{% endblock %}

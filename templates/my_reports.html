@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>הדיווחים שלי</title>
+</head>
+<body>
+  <h2>הדיווחים שלי</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% if reports and reports|length > 0 %}
+    <ul>
+      {% for r in reports %}
+        <li>
+          <b>#{{ r["id"] }}</b> | סטטוס: <b>{{ r["status"] }}</b><br>
+          קטגוריה: {{ r["category_user"] }}<br>
+          תיאור: {{ r["description"] }}<br>
+          <small>
+            {% if r["ai_category"] %}AI: {{ r["ai_category"] }}{% endif %}
+            {% if r["severity"] %} | Severity: {{ r["severity"] }}{% endif %}
+          </small><br>
+          <small>{{ r["created_at"] }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>אין דיווחים עדיין.</p>
+  {% endif %}
+
+  <p><a href="/reports/new">דיווח חדש</a></p>
+</body>
+</html>

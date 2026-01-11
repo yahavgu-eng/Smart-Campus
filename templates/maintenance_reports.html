@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>תחזוקה - כל התקלות</title>
+</head>
+<body>
+  <h2>כל התקלות (Staff)</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% if reports and reports|length > 0 %}
+    <ul>
+      {% for r in reports %}
+        <li>
+          <b>#{{ r["id"] }}</b> |
+          מדווח: {{ r["reporter_national_id"] }} ({{ r["role"] }}) |
+          סטטוס: <b>{{ r["status"] }}</b><br>
+          קטגוריה: {{ r["category_user"] }}<br>
+          <a href="/maintenance/reports/{{ r['id'] }}">לפרטים</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>אין תקלות.</p>
+  {% endif %}
+</body>
+</html>

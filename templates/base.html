@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Smart Campus{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesy.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <a class="home-btn" href="{{ url_for('healthcheck') }}" aria-label="מסך בית">
+    <img src="{{ url_for('static', filename='home_icon.png') }}" alt="">
+  </a>
+
+  <main class="page">
+    <section class="card">
+      <div class="logo-wrap">
+        <img class="logo" src="{{ url_for('static', filename='app_logo.png') }}" alt="Smart Campus">
+      </div>
+
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+
+  {# ===== Toast (flash messages) ===== #}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="toast" class="toast">{{ messages[-1] }}</div>
+      <script>
+        (function () {
+          const t = document.getElementById("toast");
+          if (!t) return;
+
+          // להציג
+          requestAnimationFrame(() => t.classList.add("show"));
+
+          // להסתיר אחרי 2.5 שניות
+          setTimeout(() => t.classList.remove("show"), 2500);
+
+          // למחוק מה-DOM אחרי 3 שניות
+          setTimeout(() => t.remove(), 3200);
+        })();
+      </script>
+    {% endif %}
+  {% endwith %}
+
+</body>
+</html>
