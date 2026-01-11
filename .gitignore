@@ -1,0 +1,18 @@
+# IDE
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Flask / DB
+instance/
+*.db
+
+# Env
+.env
+.venv/
+venv/
+
+
+
