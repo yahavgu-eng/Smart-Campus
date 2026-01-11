@@ -1,5 +1,6 @@
 Flask
 python-dotenv
 openai
-gunicorn app:app
+gunicorn 
 tzdata
+
