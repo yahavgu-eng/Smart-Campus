@@ -1,0 +1,211 @@
+/* static/css/results.css */
+
+body {
+    background-color: #c9b38f; /* הצבע החום המדויק מהתמונה */
+    direction: rtl;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* לא חובה, אבל שלא יתנגש לנו */
+h2 {
+    margin: 0;
+}
+
+/* גריד הכרטיסים */
+.rooms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px;
+    justify-content: center;
+}
+
+/* כרטיס לבן */
+.room-card {
+    background: white;
+    border-radius: 15px;
+    width: 320px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* כותרת בתוך הכרטיס (שם כיתה ובניין) */
+.card-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* פרטי הכיתה (כיסאות ומקרן) */
+.card-info {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.card-info p {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* כפתור ירוק בתחתית הכרטיס */
+.reserve-btn {
+    background-color: #a2dbaf; /* הירוק הבהיר מהתמונה */
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.reserve-btn:hover {
+    background-color: #8cc99b;
+}
+
+/* 🔹 השורה העליונה – כותרת + אייקון בית */
+.top-bar {
+    display: flex;
+    flex-direction: row-reverse; /* אייקון בצד ימין, טקסט משמאל */
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 40px;
+    gap: 12px; /* רווח ביניהם */
+}
+
+/* כותרת בתוך ה-top-bar */
+.top-bar h2 {
+    color: white;
+    font-size: 24px;
+    margin: 0;
+}
+
+/* כפתור הבית – בלי position: fixed! */
+.home-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.85);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    text-decoration: none;
+}
+
+.home-btn img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+.results-title {
+    color: white;
+    font-size: 30px;
+    text-align: center;   /* מיישר לאמצע */
+    margin: 0;
+    padding: 20px 0;     /* מרווח יפה מלמעלה */
+    font-weight: 700;    /* שתהיה בולטת */
+}
+
+/* ====== Slot headers (date + time blocks) ====== */
+.big-box {
+    max-width: 700px;
+    margin: 18px auto 10px;
+    background: rgba(255,255,255,0.20);
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 16px;
+    padding: 14px 18px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+}
+
+.big-box .title {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.big-box .subtitle {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.info-icon{
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.10);
+    font-size: 16px;
+    cursor: help;
+    margin-right: 10px;
+}
+
+/* ===== Info icon + tooltip ===== */
+
+.info-wrap{
+    position: absolute;
+    left: 14px;     /* צד שמאל של הכרטיס */
+    top: 14px;
+    z-index: 30;
+    cursor: pointer;
+}
+
+.info-icon{
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    background: #ffffff;
+    border: 2px solid rgba(0,0,0,0.15);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    user-select: none;
+}
+
+/* חלון המידע עצמו */
+.tooltip-box{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 36px;
+    width: 200px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    color: #1f2d3d;
+    pointer-events: none;
+}
+
+.info-wrap:hover .tooltip-box{
+    display: block;
+}
+
+.tip-title{
+    font-weight: 900;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.tip-line{
+    font-weight: 700;
+    font-size: 14px;
+    margin: 3px 0;
+}

@@ -1,0 +1,96 @@
+/* הגדלת ה-card הראשי */
+.card {
+    max-width: 900px !important;
+    width: 90% !important;
+    padding: 40px !important;
+    border-radius: 20px !important;
+}
+
+.student-container {
+    width: 100%;
+    direction: rtl;
+}
+
+/* ===== תאריך גדול ===== */
+.date-input-big {
+    padding: 14px 22px !important;
+    font-size: 1.2rem !important;
+    border: 2px solid #0056b3 !important;
+    border-radius: 12px !important;
+    margin-top: 10px;
+}
+
+/* ===== טווח שעות ===== */
+.time-range {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.time-range input[type="time"] {
+    padding: 12px 20px !important;
+    font-size: 1.1rem !important;
+    border: 2px solid #0056b3 !important;
+    border-radius: 10px !important;
+}
+
+.time-separator {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* ===== כפתור חיפוש ===== */
+.search-btn-student {
+    background-color: #0056b3 !important;
+    color: white !important;
+    padding: 15px 40px !important;
+    font-size: 1.2rem !important;
+    border-radius: 50px !important;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 25px;
+    box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
+}
+
+/* ===== כרטיסי תוצאות ===== */
+.student-room-card {
+    background: #f0f7ff;
+    padding: 15px 25px;
+    margin-top: 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-right: 5px solid #0056b3;
+}
+
+.book-btn-student {
+    background-color: #0056b3 !important;
+    color: white !important;
+    padding: 10px 25px !important;
+    font-size: 1rem !important;
+    border-radius: 8px !important;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ===== הודעת שגיאה ===== */
+.error-box {
+    margin-top: 18px;
+    padding: 12px 18px;
+    background: #ffd6d6;
+    border-right: 5px solid #c0392b;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #7a1f1f;
+}
+
+/* הודעה כשאין כיתות */
+.no-rooms {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #444;
+}
