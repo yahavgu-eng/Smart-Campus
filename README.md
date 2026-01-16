@@ -1,6 +1,8 @@
 
 BS-SEF 2025 – Team 6   🫶
 Smart campus system for classroom availability and issue management.
+
+
 Live demo👾 : https://smart-campus-v32n.onrender.com
 # Smart Campus📚
 
@@ -121,6 +123,7 @@ Smart Campus היא מערכת לניהול תשתיות ושריוני כיתו
 על מנת **לזרוע נתונים ראשוניים** עבור הדמו.
 
 ---
+
 
 
 
